@@ -14,7 +14,7 @@ public class MyOpenHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
     private static final String CREATE_USER_TABLE = "create table userTABLE " +
             "(_id integer primary key, User text, Password text, Name text);";
-    
+
     private static final String CREATE_NEWS_TABLE = "create table newsTABLE " +
             "(_id integer primary key, Date text, Head text, Detail text, Image text, Owner text);";
 
