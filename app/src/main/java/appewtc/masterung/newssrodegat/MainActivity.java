@@ -1,10 +1,24 @@
 package appewtc.masterung.newssrodegat;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +40,104 @@ public class MainActivity extends AppCompatActivity {
         //Delete All Data
         deleteAllData();
 
+        //Sybchronize JSON to SQLite
+        synJSONtoSQLite();
+
     }   // onCreate
+
+    private void synJSONtoSQLite() {
+
+        //Change Policy
+        StrictMode.ThreadPolicy myPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(myPolicy);
+
+        int intTimes = 0;
+        while (intTimes <= 1) {
+
+            //1. Create InputStream
+            InputStream objInputStream = null;
+            String strJSON = null;
+            String userURL = "http://swiftcodingthai.com/egat/php_get_data_master.php";
+            String newsURL = "http://swiftcodingthai.com/egat/php_get_data_news.php";
+            HttpPost objHttpPost;
+
+            try {
+
+                HttpClient objHttpClient = new DefaultHttpClient();
+
+                if (intTimes != 1) {
+                    objHttpPost = new HttpPost(userURL);
+                } else {
+                    objHttpPost = new HttpPost(newsURL);
+                }
+
+                HttpResponse objHttpResponse = objHttpClient.execute(objHttpPost);
+                HttpEntity objHttpEntity = objHttpResponse.getEntity();
+                objInputStream = objHttpEntity.getContent();
+
+            } catch (Exception e) {
+                Log.d("egat", "InputStream ==> " + e.toString());
+            }
+
+
+            //2. Create strJSON
+            try {
+
+                BufferedReader objBufferedReader = new BufferedReader(new InputStreamReader(objInputStream, "UTF-8"));
+                StringBuilder objStringBuilder = new StringBuilder();
+                String strLine = null;
+                while ((strLine = objBufferedReader.readLine()) != null ) {
+                    objStringBuilder.append(strLine);
+                }   //while
+                objInputStream.close();
+                strJSON = objStringBuilder.toString();
+
+            } catch (Exception e) {
+                Log.d("egat", "strJSON ==> " + e.toString());
+            }
+
+
+            //3. Update SQLite
+            try {
+
+                final JSONArray objJsonArray = new JSONArray(strJSON);
+
+                for (int i = 0; i < objJsonArray.length(); i++) {
+
+                    JSONObject jsonObject = objJsonArray.getJSONObject(i);
+
+                    if (intTimes != 1) {
+
+                        //For userTABLE
+                        String strUser = jsonObject.getString("User");
+                        String strPassword = jsonObject.getString("Password");
+                        String strName = jsonObject.getString("Name");
+                        objUserTABLE.addNewUser(strUser, strPassword, strName);
+
+                    } else {
+
+                        //For newsTABLE
+                        String strDate = jsonObject.getString("Date");
+                        String strHead = jsonObject.getString("Head");
+                        String strDetail = jsonObject.getString("Detail");
+                        String strImage = jsonObject.getString("Image");
+                        String strOwner = jsonObject.getString("Owner");
+                        objNewsTABLE.addNews(strDate, strHead, strDetail, strImage, strOwner);
+
+                    }
+
+                }   // for
+
+            } catch (Exception e) {
+                Log.d("egat", "Update ==> " + e.toString());
+            }
+
+
+            intTimes += 1;
+        }   // while
+
+
+    }   // synJSONtoSQLite
 
     private void deleteAllData() {
         SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase("srod.db", MODE_PRIVATE, null);
