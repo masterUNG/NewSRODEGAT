@@ -4,14 +4,37 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 public class HeadListView extends AppCompatActivity {
+
+    //Explicit
+    private ListView headListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_head_list_view);
-    }
+
+        headListView = (ListView) findViewById(R.id.listView);
+
+        //Create ListView
+        createListView();
+
+    }   // onCreate
+
+    private void createListView() {
+
+        NewsTABLE objNewsTABLE = new NewsTABLE(this);
+        String strHead[] = objNewsTABLE.readAllHead();
+        String strDate[] = objNewsTABLE.readAllDate();
+        String strDetail[] = objNewsTABLE.readAllDetail();
+        String strImage[] = objNewsTABLE.readAllImage();
+        String strOwner[] = objNewsTABLE.readAllOwner();
+
+        HeadAdapter objHeadAdapter = new HeadAdapter(HeadListView.this, strHead, strDate, strOwner, strImage);
+        headListView.setAdapter(objHeadAdapter);
+    }   // createListView
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -34,4 +57,4 @@ public class HeadListView extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+}   // Main Class

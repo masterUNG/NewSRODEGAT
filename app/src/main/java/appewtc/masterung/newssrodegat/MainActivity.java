@@ -2,6 +2,7 @@ package appewtc.masterung.newssrodegat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             if (passwordString.equals(strMyResult[2])) {
 
                 //Intent to ListNews
-
+                startActivity(new Intent(this, HeadListView.class));
 
             } else {
                 errorDialog("Password False", "Please Try Again Password False");

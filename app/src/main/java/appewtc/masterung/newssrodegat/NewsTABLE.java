@@ -2,6 +2,7 @@ package appewtc.masterung.newssrodegat;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -28,6 +29,131 @@ public class NewsTABLE {
         readSqLiteDatabase = objMyOpenHelper.getReadableDatabase();
 
     }   // Constructor
+
+    public String[] readAllDate() {
+
+        String strDate[] = null;
+        Cursor objCursor = readSqLiteDatabase.query(NEWS_TABLE,
+                new String[]{COLUMN_ID_NEWS, COLUMN_DATE},
+                null, null, null, null, null);
+
+        if (objCursor != null) {
+
+            objCursor.moveToFirst();
+            strDate = new String[objCursor.getCount()];
+            for (int i = 0; i < objCursor.getCount(); i++) {
+
+                strDate[i] = objCursor.getString(objCursor.getColumnIndex(COLUMN_DATE));
+                objCursor.moveToNext();
+
+            }   //for
+
+        }   // if
+        objCursor.close();
+
+        return strDate;
+    }   // readAllDate
+
+    public String[] readAllHead() {
+
+        String strDate[] = null;
+        Cursor objCursor = readSqLiteDatabase.query(NEWS_TABLE,
+                new String[]{COLUMN_ID_NEWS, COLUMN_HEAD},
+                null, null, null, null, null);
+
+        if (objCursor != null) {
+
+            objCursor.moveToFirst();
+            strDate = new String[objCursor.getCount()];
+            for (int i = 0; i < objCursor.getCount(); i++) {
+
+                strDate[i] = objCursor.getString(objCursor.getColumnIndex(COLUMN_HEAD));
+                objCursor.moveToNext();
+
+            }   //for
+
+        }   // if
+        objCursor.close();
+
+        return strDate;
+    }   // readAllHead
+
+    public String[] readAllDetail() {
+
+        String strDate[] = null;
+        Cursor objCursor = readSqLiteDatabase.query(NEWS_TABLE,
+                new String[]{COLUMN_ID_NEWS, COLUMN_DETAIL},
+                null, null, null, null, null);
+
+        if (objCursor != null) {
+
+            objCursor.moveToFirst();
+            strDate = new String[objCursor.getCount()];
+            for (int i = 0; i < objCursor.getCount(); i++) {
+
+                strDate[i] = objCursor.getString(objCursor.getColumnIndex(COLUMN_DETAIL));
+                objCursor.moveToNext();
+
+            }   //for
+
+        }   // if
+        objCursor.close();
+
+        return strDate;
+    }   // readAllDetail
+
+    public String[] readAllImage() {
+
+        String strDate[] = null;
+        Cursor objCursor = readSqLiteDatabase.query(NEWS_TABLE,
+                new String[]{COLUMN_ID_NEWS, COLUMN_IMAGE},
+                null, null, null, null, null);
+
+        if (objCursor != null) {
+
+            objCursor.moveToFirst();
+            strDate = new String[objCursor.getCount()];
+            for (int i = 0; i < objCursor.getCount(); i++) {
+
+                strDate[i] = objCursor.getString(objCursor.getColumnIndex(COLUMN_IMAGE));
+                objCursor.moveToNext();
+
+            }   //for
+
+        }   // if
+        objCursor.close();
+
+        return strDate;
+    }   // readAllImage
+
+    public String[] readAllOwner() {
+
+        String strDate[] = null;
+        Cursor objCursor = readSqLiteDatabase.query(NEWS_TABLE,
+                new String[]{COLUMN_ID_NEWS, COLUMN_OWNER},
+                null, null, null, null, null);
+
+        if (objCursor != null) {
+
+            objCursor.moveToFirst();
+            strDate = new String[objCursor.getCount()];
+            for (int i = 0; i < objCursor.getCount(); i++) {
+
+                strDate[i] = objCursor.getString(objCursor.getColumnIndex(COLUMN_OWNER));
+                objCursor.moveToNext();
+
+            }   //for
+
+        }   // if
+        objCursor.close();
+
+        return strDate;
+    }   // readAllOwner
+
+
+
+
+
 
     public long addNews(String strDate, String strHead, String strDetail,
                         String strImage, String strOwner) {
