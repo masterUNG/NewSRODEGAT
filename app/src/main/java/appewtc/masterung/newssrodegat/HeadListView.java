@@ -1,9 +1,12 @@
 package appewtc.masterung.newssrodegat;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class HeadListView extends AppCompatActivity {
@@ -26,14 +29,30 @@ public class HeadListView extends AppCompatActivity {
     private void createListView() {
 
         NewsTABLE objNewsTABLE = new NewsTABLE(this);
-        String strHead[] = objNewsTABLE.readAllHead();
-        String strDate[] = objNewsTABLE.readAllDate();
-        String strDetail[] = objNewsTABLE.readAllDetail();
-        String strImage[] = objNewsTABLE.readAllImage();
-        String strOwner[] = objNewsTABLE.readAllOwner();
+        final String strHead[] = objNewsTABLE.readAllHead();
+        final String strDate[] = objNewsTABLE.readAllDate();
+        final String strDetail[] = objNewsTABLE.readAllDetail();
+        final String strImage[] = objNewsTABLE.readAllImage();
+        final String strOwner[] = objNewsTABLE.readAllOwner();
 
         HeadAdapter objHeadAdapter = new HeadAdapter(HeadListView.this, strHead, strDate, strOwner, strImage);
         headListView.setAdapter(objHeadAdapter);
+
+        headListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Intent objIntent = new Intent(HeadListView.this, DetailActivity.class);
+                objIntent.putExtra("Head", strHead[i]);
+                objIntent.putExtra("Image", strImage[i]);
+                objIntent.putExtra("Date", strDate[i]);
+                objIntent.putExtra("Detail", strDetail[i]);
+                objIntent.putExtra("Owner", strOwner[i]);
+                startActivity(objIntent);
+
+            }   // event
+        });
+
     }   // createListView
 
     @Override
